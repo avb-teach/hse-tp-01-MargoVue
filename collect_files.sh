@@ -47,4 +47,3 @@ for file in $files; do
     cp "$file" "$path"
 done
 
-
