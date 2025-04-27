@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# mkdir input_dir output_dir
+
+mkdir -p input_dir/{dir2,dir3} && \
+touch input_dir/a.txt input_dir/dir2/b.txt input_dir/dir3/c.txt
+
+
+mkdir -p output_dir && rm -rf output_dir/* 2>/dev/null
+
+
+
 if [[ "$1" == "--max_depth" ]]; then
     depth="$2"
     input="$3"
@@ -14,7 +24,7 @@ if [[ -z "$input" || -z "$output" ]]; then
     echo "Нужно указать директории!"
     exit 1
 fi
-#! "Margosha "
+
 mkdir -p "$output"
 
 if [[ -n "$depth" ]]; then
@@ -39,3 +49,12 @@ for file in $files; do
 
     cp "$file" "$path"
 done
+
+
+
+
+
+
+
+
+
