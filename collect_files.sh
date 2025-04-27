@@ -14,7 +14,7 @@ if [[ -z "$input" || -z "$output" ]]; then
     echo "Нужно указать директории!"
     exit 1
 fi
-
+#! "Margosha "
 mkdir -p "$output"
 
 if [[ -n "$depth" ]]; then
