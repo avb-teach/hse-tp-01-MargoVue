@@ -1,13 +1,11 @@
 #!/bin/bash
 
-if [[ "$1" == "--max_depth" ]]; then
-    depth="$2"
-    input="$3"
-    output="$4"
-else
-    depth=""
-    input="$1"
-    output="$2"
+input="$1"
+output="$2"
+depth=""
+
+if [[ "$3" == "--max_depth" && -n "$4" ]]; then
+    depth="$4"
 fi
 
 if [[ -z "$input" || -z "$output" ]]; then
