@@ -1,11 +1,13 @@
 #!/bin/bash
 
-input="$1"
-output="$2"
-depth=""
-
-if [[ "$3" == "--max_depth" && -n "$4" ]]; then
-    depth="$4"
+if [[ "$1" == "--max_depth" ]]; then
+    depth="$2"
+    input="$3"
+    output="$4"
+else
+    depth=""
+    input="$1"
+    output="$2"
 fi
 
 if [[ -z "$input" || -z "$output" ]]; then
@@ -13,32 +15,34 @@ if [[ -z "$input" || -z "$output" ]]; then
     exit 1
 fi
 
-input="${input%/}"
 mkdir -p "$output"
 
-find "$input" -type f | while read -r file; do
-    rel_path="${file#$input/}"
-    rel_path="${rel_path#/}"
-    
-    # Вычисляем глубину файла
-    slashes="${rel_path//[^\/]/}"
-    current_depth=$((${#slashes} + 1))
-    
-    if [[ -n "$depth" && $current_depth -gt $depth ]]; then
-        # Для файлов глубже максимальной глубины
-        IFS='/' read -ra parts <<< "$rel_path"
+if [[ -n "$depth" ]]; then
+    files=$(find "$input" -maxdepth "$depth" -type f)
+else
+    files=$(find "$input" -type f)
+fi
 
-        new_rel_path="depth3"
-        for ((i=$depth; i<${#parts[@]}; i++)); do
-            new_rel_path+="/${parts[i]}"
+for file in $files; do
+    rel_path="${file#$input/}"
+    path="$output/$rel_path"
+
+    mkdir -p "$(dirname "$path")"
+
+    if [[ -e "$path" ]]; then
+        name=$(basename "$rel_path")
+        base="${name%.*}"
+        ext="${name##*.}"
+
+        dir_path="$(dirname "$path")"
+
+        n=1
+        while [[ -e "$dir_path/${base}${n}.${ext}" ]]; do
+            n=$((n+1))
         done
-    else
-        new_rel_path="$rel_path"
+
+        path="$dir_path/${base}${n}.${ext}"
     fi
-    
-    dest_path="$output/$new_rel_path"
-    dest_dir=$(dirname "$dest_path")
-    
-    mkdir -p "$dest_dir"
-    cp "$file" "$dest_path"
+
+    cp "$file" "$path"
 done
