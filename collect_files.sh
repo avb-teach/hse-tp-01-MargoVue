@@ -13,6 +13,8 @@ if [[ -z "$input" || -z "$output" ]]; then
     exit 1
 fi
 
+input="${input%/}"
+
 mkdir -p "$output"
 
 if [[ -n "$depth" ]]; then
@@ -22,18 +24,13 @@ else
 fi
 
 for file in $files; do
-    name=$(basename "$file")
-    path="$output/$name"
-
-    if [[ -e "$path" ]]; then
-        base="${name%.*}"
-        ext="${name##*.}"
-        n=1
-        while [[ -e "$output/${base}${n}.${ext}" ]]; do
-            n=$((n+1))
-        done
-        path="$output/${base}${n}.${ext}"
-    fi
-
-    cp "$file" "$path"
+    rel_path="${file#$input/}"
+    rel_path="${rel_path#/}"
+    
+    dest_path="$output/$rel_path"
+    dest_dir=$(dirname "$dest_path")
+    
+    mkdir -p "$dest_dir"
+    
+    cp "$file" "$dest_path"
 done
