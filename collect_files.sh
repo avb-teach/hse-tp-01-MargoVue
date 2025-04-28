@@ -29,20 +29,5 @@ for file in $files; do
 
     mkdir -p "$(dirname "$path")"
 
-    if [[ -e "$path" ]]; then
-        name=$(basename "$rel_path")
-        base="${name%.*}"
-        ext="${name##*.}"
-
-        dir_path="$(dirname "$path")"
-
-        n=1
-        while [[ -e "$dir_path/${base}${n}.${ext}" ]]; do
-            n=$((n+1))
-        done
-
-        path="$dir_path/${base}${n}.${ext}"
-    fi
-
     cp "$file" "$path"
 done
