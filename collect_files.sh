@@ -31,3 +31,6 @@ for file in $files; do
 
     cp "$file" "$path"
 done
+
+# Удаляем пустые папки
+find "$output" -type d -empty -delete
