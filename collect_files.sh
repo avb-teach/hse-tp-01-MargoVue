@@ -6,7 +6,7 @@ output="$2"
 useless="$3"
 maximal_depth="$4"
 
-if [[ $useless == "" ]]
+if [[ $useless == "" ]]; then
     mkdir -p "$output"
 
     if [[ -n "$depth" ]]; then
